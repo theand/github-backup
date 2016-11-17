@@ -8,9 +8,17 @@ require 'optparse'
 options = {}
 optionparser = OptionParser.new do |opts|
   opts.banner = "Usage: github-backup [options] username [local_backup_root]"
-  
+
   opts.on("-t", "--token TOKEN", "Github API Token") do |t|
     options[:token] = t
+  end
+
+  opts.on("-e", "--enterprise HOSTNAME", "Github Enterprise Hostname") do |e|
+    options[:enterprise] = e
+  end
+
+  opts.on("-c", "--clone", "git clone mode") do |c|
+    options[:clone] = c
   end
 end
 optionparser.parse!

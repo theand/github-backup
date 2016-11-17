@@ -5,18 +5,22 @@ module GithubBackup
       :gitconfig_path => "#{ENV['HOME']}/.gitconfig",
     }
 
-    attr_reader :backup_root, :gitconfig_path, :token
+    attr_reader :backup_root, :gitconfig_path, :token, :enterprise, :clone
 
     def initialize(options = {})
       @backup_root    = options.fetch(:backup_root, nil)    || Dir.pwd
       @gitconfig_path = options.fetch(:gitconfig_path, nil) || DEFAULTS[:gitconfig_path]
       @token          = options.fetch(:token)               { default_token }
+      @enterprise     = options.fetch(:enterprise, nil)
+      @clone          = options.fetch(:clone, nil)
     end
 
     def ==(other)
       backup_root == other.backup_root &&
         gitconfig_path == other.gitconfig_path &&
-          token == other.token
+          token == other.token &&
+            enterprise == other.enterprise &&
+              clone == other.clone
     end
 
     private

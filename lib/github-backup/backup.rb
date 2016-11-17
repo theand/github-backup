@@ -6,6 +6,16 @@ module GithubBackup
       @username    = username
       @debug       = false
       @config      = Config.new(options)
+      if config.enterprise
+        Octokit.configure do |c|
+          if config.enterprise.start_with? "https://"
+            enterprise = config.enterprise
+          else
+            enterprise = "https://#{config.enterprise}"
+          end
+          c.api_endpoint = "#{enterprise}/api/v3/"
+        end
+      end
       @client      = Octokit::Client.new(:access_token => config.token)
     end
 
@@ -25,7 +35,7 @@ module GithubBackup
     end
 
     def backup_directory_for(repository)
-      File.join(backup_root, repository.full_name) + '.git'
+      File.join(backup_root, repository.full_name)
     end
 
     def backup_all
@@ -73,7 +83,7 @@ module GithubBackup
 
     def backup_repository_initial(repository)
       FileUtils::cd(backup_root) do
-        shell("git clone --mirror -n #{repository.ssh_url} #{repository.full_name}.git")
+        shell("git clone  #{repository.ssh_url} #{repository.full_name}")
       end
     end
 
